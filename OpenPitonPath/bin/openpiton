@@ -1,0 +1,323 @@
+#!/usr/bin/env python
+import os
+import sys
+import shutil
+
+################################################################################
+################################################################################
+################################################################################
+############################## VERILATOR #######################################
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+
+def yes_or_no(question):
+    reply = str(raw_input(question+' (y/n): ')).lower().strip()
+    if reply[0] == 'y':
+        return True
+    if reply[0] == 'n':
+        return False
+    else:
+        return yes_or_no("Uhhhh... please enter "),
+
+
+def convert_wave():
+    #if yes_or_no("Convert vcd?"):
+    print "Renaming my_top.vcd to wave.vcd\n"
+    os.system("mv my_top.vcd wave.vcd")
+
+    #Convert vcd to wlf
+    print "Converting wave.vcd to wave.wlf\n"
+    os.system("vcd2wlf wave.vcd wave.wlf")
+
+
+def gen_verilator(vsim, X_DIMM, Y_DIMM):
+    if vsim:
+        gen_command = "sims -sys=manycore -vlt_build -vlt_build_args=--trace -vlt_build_args=-CFLAGS -vlt_build_args=-DVERILATOR_VCD -x_tiles="+str(X_DIMM)+" -y_tiles="+str(Y_DIMM)+" -ariane -config_rtl=PITON_NO_JTAG -config_rtl=PITON_NO_CHIP_BRIDGE -config_rtl=PITON_CLKS_CHIPSET"
+    else:
+        gen_command = "sims -sys=manycore -vlt_build -x_tiles="+str(X_DIMM)+" -y_tiles="+str(Y_DIMM)+" -ariane -config_rtl=PITON_NO_JTAG -config_rtl=PITON_NO_CHIP_BRIDGE -config_rtl=PITON_CLKS_CHIPSET"
+
+
+    print "\nCommand executed: " + gen_command
+
+    print "\nGenerating OpenPiton, please wait the finishing message (in 2 min. approximately)..."
+
+    #log_file = "openpithon-gen.log"
+    #exit_status = os.system(gen_command + " > "+log_file)
+    exit_status = os.system(gen_command)
+
+    if exit_status != 0:
+       # sys.exit("\nError in generating OpenPiton"+"\nLog file: "+log_file)
+        sys.exit("\nError in generating OpenPiton")
+    else:
+        print "\nSuccess!"
+
+    #print "\nLog file: "+log_file
+
+def run_verilator(vsim, X_DIMM, Y_DIMM, testcase):
+
+    #Delete current wave traces
+    if vsim:
+        os.system("rm -rf wave.wlf")
+        os.system("rm -rf *.vcd")
+
+    log_file = "openpithon-run.log"
+
+    #RUN MODELSIM ORIGINAL = sims -sys=manycore -gui -msm_run -x_tiles=2 -y_tiles=1 -ariane print_test.c -rtl_timeout=100000000 -max_cycle=50000
+    run_command = "sims -sys=manycore -vlt_run -x_tiles="+str(X_DIMM)+" -y_tiles="+str(Y_DIMM)+" -ariane "+testcase+".c -rtl_timeout=100000000 -max_cycle=50000"
+#max)cycles is the simulatio time
+    exit_status = os.system(run_command)
+
+    print "\nRunning command executed: " + run_command
+    if exit_status != 0:
+        sys.exit("\nError in running OpenPiton"+"\nLog file: "+log_file)
+    
+    if vsim:
+        convert_wave()
+        
+        print "\nOpening ModelSim"
+        os.system("vsim -view wave.wlf -do wave.do")
+    
+
+def wave_verilator(X_DIMM, Y_DIMM):
+    #Call wavegen
+    print "Generating the wave for Questa in a Verilator simulation "
+    os.system("openpiton-verilator_wavegen "+str(X_DIMM)+" "+str(Y_DIMM))
+    
+
+################################################################################
+################################################################################
+################################################################################
+################################# QUESTA #######################################
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+
+def wave_questa(X_DIMM, Y_DIMM):
+        #Call wavegen
+        print "Generating the wave for Questa in a Questa simulation"
+        os.system("openpiton-questa_wavegen "+str(X_DIMM)+" "+str(Y_DIMM))
+
+
+def gen_questa(X_DIMM, Y_DIMM):
+
+        gen_command = "sims -sys=manycore -msm_build -x_tiles="+str(X_DIMM)+" -y_tiles="+str(Y_DIMM)+" -ariane -config_rtl=PITON_NO_JTAG -config_rtl=PITON_NO_CHIP_BRIDGE -config_rtl=PITON_CLKS_CHIPSET -config_rtl=MINIMAL_MONITORING"
+
+        print "\nCommand executed: " + gen_command
+
+        print "\nGenerating OpenPiton, please wait the finishing message (in 2 min. approximately)..."
+
+        exit_status = os.system(gen_command)
+
+        if exit_status != 0:
+            sys.exit("\nError in generating OpenPiton")
+        else:
+            print "\nSuccess!"
+
+        #print "\nLog file: "+log_file
+
+def run_questa(wave, vsim, X_DIMM, Y_DIMM, testcase, build_dir):
+
+        log_file = "openpithon-run.log"
+        os.system("rm -f "+build_dir+"/sim.log")
+        os.system("touch "+build_dir+"/sim.log")
+
+        if wave or vsim:
+            #Delete current wave traces and generate new ones
+            os.system("rm all-waves.wlf")
+            os.system("rm -rf *.vcd")
+
+            #Create the sim.do command just to allow sim.do from modelsim
+            #sim_do = '''vsim  -wlfcompress -wlf all-waves.wlf -do "do wave.do log -r /*" -lib /home/ruaro/openpiton/build/manycore/rel-0.1/work -do "run -all" cmp_top -pli "/home/ruaro/openpiton/piton/tools/Linux/x86_64/lib/libmodelsimpli.so" +wait_cycle_to_kill=10 +dowarningfinish +doerrorfinish +spc_pipe=0 -gui +vcs+dumpvarsoff +TIMEOUT=100000000 +max_cycle=50000 +tg_seed=0  +good_trap0=000000008000050a  +bad_trap0=000000008000050c +asm_diag_name=print_test.c +dv_root=/home/ruaro/openpiton/piton'''
+
+            #Save sim.do command
+            #file = open(build_dir+"/sim.do", 'w')
+            #file.write(sim_do)
+            #file.close()
+
+            run_command = "sims -sys=manycore -msm_run -gui -log_all -x_tiles="+str(X_DIMM)+" -y_tiles="+str(Y_DIMM)+" -ariane "+testcase+".c -rtl_timeout=100000000 -max_cycle=50000"
+
+            #Run sim.do command
+            #run_command = "vsim -do sim.do"
+        else:
+            run_command = "sims -sys=manycore -msm_run -x_tiles="+str(X_DIMM)+" -y_tiles="+str(Y_DIMM)+" -ariane "+testcase+".c -rtl_timeout=100000000 -max_cycle=50000"
+
+        exit_status = os.system(run_command)
+
+        print "\nRunning command executed: " + run_command
+        if exit_status != 0:
+            sys.exit("\nError in running OpenPiton"+"\nLog file: "+log_file)
+        
+
+
+#Check if this script is called from openpiton/build
+piton_root = os.environ['PITON_ROOT']
+right_dir=piton_root+"/build"
+build_dir = os.getcwd()
+
+if right_dir != build_dir:
+    sys.exit("You are running this script in the wrong directory ("+build_dir+").\nMake sure that you are in: "+right_dir+" which is the right one!")
+
+
+man = '''
+NAME
+   openpiton - generates and run the openpiton
+
+SYNOPSIS
+    openpiton X_DIMMENSION  Y_DIMMENSION [OPTIONS]...
+
+DESCRIPTION
+    Mandatory arguments:
+
+        X_DIMMENSION    (Mandatory), 1st argument is an integer positive number representing the X dimmension
+
+        Y_DIMMENSION    (Mandatory), 2st argument is an integer positive number representing the Y dimmension
+    
+    Semi-Optional arguments (-run or -gen or -all is mandatory):
+
+        -gen        (Optional), Generates the manycore model
+
+        -wave    (Optional), Generates manycore model with waveform generation enabled
+
+        -run        (Optional), Runs the manycore model in the specif testcase after run command, e.g.: -run prod_cons
+
+        -all        (Optional), Generates and runs the manycore model in the specif testcase after all command, e.g.: -all prod_cons
+
+        -vsim       (Optional), Opens ModelSim 
+
+        -debug      (Optional), Opens GUI Debugger 
+
+'''
+
+if len(sys.argv) == 1:
+    print man
+    sys.exit(1)
+
+try:
+    X_DIMM = int(sys.argv[1]) #-ntm: apply ntm, -cow: apply cow to run in local machine, -cowsniper: apply cow to run in sniper simulator 
+except:
+    sys.exit("\nYou must inform as 1st argument a integer positive number representing the X dimmension, ex 2 \n")
+try:
+    Y_DIMM = int(sys.argv[2]) #-ntm: apply ntm, -cow: apply cow to run in local machine, -cowsniper: apply cow to run in sniper simulator 
+except:
+    sys.exit("\nYou must inform as 2nd argument a integer positive number representing the Y dimmension, ex 2 \n")
+
+with_wave = False
+generate_openpiton = False
+run_openpiton = False
+modelsim = False
+modelsim_gen = False
+debug = False
+testcase = ""
+
+args_ok = False
+
+for index in range(3,len(sys.argv)):
+    arg = sys.argv[index]
+
+    if arg == "-gen":
+        generate_openpiton = True
+
+    elif arg == "-wave":
+        with_wave = True
+
+    elif arg == "-run":
+        run_openpiton = True
+        try:
+            testcase = sys.argv[index+1]
+            args_ok = True
+        except:
+            sys.exit("Invalid testcase name passed after -run, e.g.: openpiton 2 2 -run prod_cons")
+
+    elif arg == "-all":
+        generate_openpiton = True
+        run_openpiton = True
+        try:
+            testcase = sys.argv[index+1]
+            args_ok = True
+        except:
+            sys.exit("Invalid testcase name passed after -all, e.g.: openpiton 2 2 -all prod_cons")
+
+    elif arg == "-debug":
+        debug = True
+
+    elif arg == "-vsim":
+        modelsim = True
+
+if run_openpiton and testcase == "":
+    print man
+    sys.exit("Missing testcase name when -run is enabled, e.g.: openpiton 2 2 -run -testcase ola")
+
+
+if run_openpiton or generate_openpiton:
+    
+    debug_folder = build_dir+"/debug"
+    if os.path.isdir(debug_folder):
+        shutil.rmtree(debug_folder)
+
+    log_folder = debug_folder+"/log"
+    
+    os.system("mkdir "+debug_folder)
+    os.system("mkdir "+log_folder)
+
+    platform_cfg = "mpsoc_x "+str(X_DIMM)+"\n"
+    platform_cfg = platform_cfg + "mpsoc_y "+str(Y_DIMM)
+    platform_cfg = platform_cfg + """
+manager_position_x 0
+manager_position_y 0
+chipset_position WEST
+chipset_id 8192
+flit_size 64
+clock_period_ns 1
+throughput_mon_window_ms 0.0005
+BEGIN_task_name_relation
+cons 0
+prod 1
+END_task_name_relation
+BEGIN_app_name_relation
+prod_cons	0
+mpeg	1
+END_app_name_relation"""
+    file = open(debug_folder+"/platform.cfg", 'w')
+    file.write(platform_cfg)
+    file.close() 
+
+    os.system("cp "+piton_root+"/piton/verif/debug_env/services.cfg "+debug_folder+"/")
+
+    os.system("touch "+debug_folder+"/traffic_router.txt")
+
+
+
+
+################################################################################
+################################################################################
+################################################################################
+################################### MAIN #######################################
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+
+if debug:
+    platform_path = build_dir+"/debug/platform.cfg"
+    print "Opening Graphical Debugger\n"
+    os.system("java -jar "+piton_root+"/bin/OpenPiton_Debugger.jar "+platform_path+" &")
+
+if with_wave:
+
+    wave_questa(X_DIMM, Y_DIMM)
+    #wave_verilator(X_DIMM, Y_DIMM)
+
+if generate_openpiton:
+
+    gen_questa(X_DIMM, Y_DIMM)
+    #gen_verilator(modelsim, X_DIMM, Y_DIMM)
+
+if run_openpiton:
+
+    run_questa(with_wave, modelsim, X_DIMM, Y_DIMM, testcase, build_dir)
+    #run_verilator(modelsim, X_DIMM, Y_DIMM, testcase)
+
+
