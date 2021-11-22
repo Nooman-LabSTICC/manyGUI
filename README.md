@@ -1,10 +1,10 @@
 # ManyGUI
 ## Graphical User Interface Tool for Debugging Many-cores
 
-This repository stores the NetBeans project of the graphical debugger for many-cores called ManyGUI. 
-The current version support OpenPiton (https://parallel.princeton.edu/openpiton/).
+This repository stores the NetBeans (v8.2) project of the graphical debugger for many-cores called ManyGUI. 
+The current version supports OpenPiton (https://parallel.princeton.edu/openpiton/).
 
-We modified OpenPiton to support the debugging features of ManyGUI. **Please follow this steps to use the tool:**
+We modified OpenPiton hardware model to support the debugging features of ManyGUI. **Please follow this steps to use the tool:**
 
 1. Download and install OpenPiton: 
    > https://github.com/PrincetonUniversity/openpiton
