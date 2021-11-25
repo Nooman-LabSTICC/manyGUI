@@ -27,18 +27,18 @@ We modified OpenPiton hardware model to support the debugging features of ManyGU
 6. The simulation should start and ManyGUI must be opened.
 
 
-----------------
-If you found problems following this steps, please considers use the OpenPiton version that already is integrated with ManyGUI.
+
+> If you found problems following this steps, please considers use the OpenPiton version that already is integrated with ManyGUI.
 To do so, please follow the instruction of this [link](https://github.com/Nooman-LabSTICC/nooman-openpiton)
-----------------
+
 
 
 ## Video tutorials:
 
 ### Version 1: 
-[![LINK 1]()](https://youtu.be/XOHMqZNIwks)
+[Watch on YouTube](https://youtu.be/XOHMqZNIwks)
 ### Version 2:
-[![LINK 2]()](https://youtu.be/VU6yRrICwsk)
+[Watch on YouTube](https://youtu.be/VU6yRrICwsk)
 
 
 
