@@ -36,9 +36,9 @@ To do so, please follow the instruction of this [link](https://github.com/Nooman
 ## Video tutorials:
 
 ### Version 1: 
-[![LINK 1](https://i9.ytimg.com/vi/XOHMqZNIwks/mq1.jpg)](https://youtu.be/XOHMqZNIwks)
+[![LINK 1]()](https://youtu.be/XOHMqZNIwks)
 ### Version 2:
-[![LINK 2](https://i9.ytimg.com/vi/VU6yRrICwsk/mq2.jpg)](https://youtu.be/VU6yRrICwsk)
+[![LINK 2]()](https://youtu.be/VU6yRrICwsk)
 
 
 
