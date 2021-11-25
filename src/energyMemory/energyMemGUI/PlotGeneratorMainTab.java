@@ -209,7 +209,8 @@ public class PlotGeneratorMainTab extends JPanel{
             plotName = "System_Energy";
         }
         
-        String command = "python "+controlPanel.getDebugPath()+"/../../bin/bar_energy.py "+
+        
+        String command = "python "+controlPanel.getDebugPath()+"/../../utils/matplotlib/bar_energy.py "+
                 convertArrayToStringListPython(x_series_NoC)+" "+
                 convertArrayToStringListPython(x_series_Mem)+" "+
                 convertArrayToStringListPython(x_series_CPU)+" "+
@@ -384,7 +385,7 @@ public class PlotGeneratorMainTab extends JPanel{
             plotName = "System_"+plotName;
         }
         
-        String command = "python "+controlPanel.getDebugPath()+"/../../bin/line_mem.py "+
+        String command = "python "+controlPanel.getDebugPath()+"/../../utils/matplotlib/line_mem.py "+
                 convertArrayToStringListPython(x_series)+" "+
                 "Abs"+" "+
                 plotName+" "+

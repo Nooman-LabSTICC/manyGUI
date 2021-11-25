@@ -22,6 +22,7 @@ public class EnergyInfo {
     private CounterCPU energyCPU;
     private CouterMemory energyMemory;
     private CounterNoC energyNoC;
+    private boolean errorReading;
     
     
     private ReadMonitoredData readMonitoredData;
@@ -31,6 +32,8 @@ public class EnergyInfo {
         energyCPU = new CounterCPU();
         energyMemory = new CouterMemory();
         energyNoC = new CounterNoC();
+        errorReading  = false;
+        
         
         this.readMonitoredData = new ReadMonitoredData(cpuAndMemLogPath, nocPath);
         
@@ -42,6 +45,7 @@ public class EnergyInfo {
             energyMemory = new CouterMemory();
             energyNoC = new CounterNoC();
             readMonitoredData.resetReader();
+            errorReading  = false;
         } catch (IOException ex) {
             Logger.getLogger(EnergyInfo.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -62,46 +66,50 @@ public class EnergyInfo {
         int time = ei.getTime();
 
         switch(ei.getName()){
-            case "# L1-D access":
+            case "L1-Daccess":
                 energyMemory.addEnergyMemory(new MemoryEvent(time, MemoryEventType.L1_D_ACCESS, addr));
                 break;
-            case "# L1-I access":
+            case "L1-Iaccess":
                 energyMemory.addEnergyMemory(new MemoryEvent(time, MemoryEventType.L1_I_ACCESS, addr));
                 break;
-            case "# L1-D miss":
+            case "L1-Dmiss":
                 energyMemory.addEnergyMemory(new MemoryEvent(time, MemoryEventType.L1_D_MISS, addr));
                 break;
-            case "# L1-I miss":
+            case "L1-Imiss":
                 energyMemory.addEnergyMemory(new MemoryEvent(time, MemoryEventType.L1_I_MISS, addr));
                 break;
-            case "# L1-D amo access":
+            case "L1-Damo access":
                 energyMemory.addEnergyMemory(new MemoryEvent(time, MemoryEventType.L1_AMO_ACCESS, addr));
                 break;
-            case "# L2 access":
+            case "L2access":
                 energyMemory.addEnergyMemory(new MemoryEvent(time, MemoryEventType.L2_ACCESS, addr));
                 break;
-            case "# L2 miss":
+            case "L2miss":
                 energyMemory.addEnergyMemory(new MemoryEvent(time, MemoryEventType.L2_MISS, addr));
                 break;
-            case "# L2 LOAD_MEM":
+            case "L2LOAD_MEM":
                 energyMemory.addEnergyMemory(new MemoryEvent(time, MemoryEventType.LOAD_MEM, addr));
                 break;
-            case "# DRAM access":
+            case "DRAMaccess":
                 energyMemory.addEnergyMemory(new MemoryEvent(time, MemoryEventType.DRAM_ACCESS, addr));
                 System.out.println(addr);
                 break;
 
-            case "# ALU instr":
+            case "ALUinstr":
                 energyCPU.addEnergyCore(new InstructionEvent(time, ControlPanel.InstructionClass.ALU, addr));
                 break;
-            case "# LSU instr":
+            case "LSUinstr":
                 energyCPU.addEnergyCore(new InstructionEvent(time, ControlPanel.InstructionClass.LSU, addr));
                 break;
-            case "# Others instr":
+            case "Othersinstr":
                 energyCPU.addEnergyCore(new InstructionEvent(time, ControlPanel.InstructionClass.OTHERS, addr));
                 break;
             default:
-                System.out.println("ERROR: no valid event found at line: "+ei.getName());
+                if (errorReading == false){
+                //System.out.println("ERROR: no valid event found at line: "+ei.getName() + " time: "+time);
+                    System.out.println("ManyGui: Some errors were found reading log file. Reload the tool (Ctrl+R) and read again after the simulation end.");
+                    errorReading = true;
+                }
                 break;
         }
         

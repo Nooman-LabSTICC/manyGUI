@@ -47,7 +47,7 @@ public class MainEnergyMemoryFrame extends javax.swing.JFrame{
         this.setPreferredSize(new Dimension(XDIM*100, YDIM*100+500));
         this.setMinimumSize(new Dimension(XDIM*200,YDIM*100+500));
         
-        String simLogPath = debugPath+"/../sim.log";
+        String simLogPath = debugPath+"/mem_cpu_log.txt";
         String nocPath = debugPath+"/traffic_router.txt";
         
         try {
@@ -158,7 +158,7 @@ public class MainEnergyMemoryFrame extends javax.swing.JFrame{
         jPanel1.add(applyButton);
         applyButton.setBounds(360, 5, 70, 27);
 
-        updateButton.setFont(new java.awt.Font("Ubuntu", 0, 12)); // NOI18N
+        updateButton.setFont(updateButton.getFont().deriveFont(updateButton.getFont().getSize()-3f));
         updateButton.setText("Update");
         updateButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -179,20 +179,20 @@ public class MainEnergyMemoryFrame extends javax.swing.JFrame{
         jPanel1.add(jLabelMaxTile);
         jLabelMaxTile.setBounds(120, 38, 100, 15);
 
-        maxEnergyjTextField.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
+        maxEnergyjTextField.setFont(new java.awt.Font("Dialog", 0, 11)); // NOI18N
         maxEnergyjTextField.setText("500");
         jPanel1.add(maxEnergyjTextField);
-        maxEnergyjTextField.setBounds(220, 34, 80, 20);
+        maxEnergyjTextField.setBounds(220, 32, 80, 25);
 
         y_axis_label.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         y_axis_label.setText("nJoules");
         jPanel1.add(y_axis_label);
         y_axis_label.setBounds(300, 38, 60, 15);
 
-        windowSizejTextField.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
+        windowSizejTextField.setFont(new java.awt.Font("Dialog", 0, 11)); // NOI18N
         windowSizejTextField.setText("50");
         jPanel1.add(windowSizejTextField);
-        windowSizejTextField.setBounds(220, 9, 80, 20);
+        windowSizejTextField.setBounds(220, 5, 80, 25);
 
         jLabel8.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         jLabel8.setText("Kcycles");
@@ -213,7 +213,7 @@ public class MainEnergyMemoryFrame extends javax.swing.JFrame{
         jPanel1.add(jLabel10);
         jLabel10.setBounds(140, 10, 80, 15);
 
-        stopButton.setFont(new java.awt.Font("Ubuntu", 0, 12)); // NOI18N
+        stopButton.setFont(stopButton.getFont().deriveFont(stopButton.getFont().getSize()-3f));
         stopButton.setText("Stop");
         stopButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

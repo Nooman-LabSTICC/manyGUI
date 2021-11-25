@@ -105,6 +105,8 @@ public final class MainFrame extends javax.swing.JFrame {
             }
             configProcess(args[0]);
         }
+        
+        percentLabel.setVisible(false);
 
     }
 
@@ -300,7 +302,7 @@ public final class MainFrame extends javax.swing.JFrame {
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder("Simulation Control"));
         jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        nextButton.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        nextButton.setFont(nextButton.getFont().deriveFont(nextButton.getFont().getStyle() | java.awt.Font.BOLD, nextButton.getFont().getSize()-3));
         nextButton.setText(">||");
         nextButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -309,7 +311,7 @@ public final class MainFrame extends javax.swing.JFrame {
         });
         jPanel3.add(nextButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 30, 60, 48));
 
-        playButton.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        playButton.setFont(playButton.getFont().deriveFont(playButton.getFont().getStyle() | java.awt.Font.BOLD, playButton.getFont().getSize()-1));
         playButton.setText(">");
         playButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -318,7 +320,7 @@ public final class MainFrame extends javax.swing.JFrame {
         });
         jPanel3.add(playButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 30, 55, 48));
 
-        stopButton.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        stopButton.setFont(stopButton.getFont().deriveFont(stopButton.getFont().getStyle() | java.awt.Font.BOLD, stopButton.getFont().getSize()-1));
         stopButton.setText("STOP");
         stopButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1445,6 +1447,9 @@ public final class MainFrame extends javax.swing.JFrame {
         int neighbor_arrow = -1;
         int local_arrow = -1;
         boolean local_in = false;
+        
+        //Comment (without concerns) this line if you want the the packet path keep painted. This works well in Memphis but in OpenPiton not, creating a deadlock in paiting.
+        resetAllArrows();
 
         switch (port) {
             case MPSoCConfig.NORTH1:
@@ -1539,7 +1544,6 @@ public final class MainFrame extends javax.swing.JFrame {
         }
         
         //Control the full path color
-        
         if (unfinished_packet_list.isEmpty()){
             resetAllArrows();
         }
