@@ -34,9 +34,9 @@ def convert_wave():
 
 def gen_verilator(vsim, X_DIMM, Y_DIMM):
     if vsim:
-        gen_command = "sims -sys=manycore -vlt_build -vlt_build_args=--trace -vlt_build_args=-CFLAGS -vlt_build_args=-DVERILATOR_VCD -x_tiles="+str(X_DIMM)+" -y_tiles="+str(Y_DIMM)+" -ariane -config_rtl=PITON_NO_JTAG -config_rtl=PITON_NO_CHIP_BRIDGE -config_rtl=PITON_CLKS_CHIPSET"
+        gen_command = "sims -sys=manycore -vlt_build -vlt_build_args=--trace -vlt_build_args=-CFLAGS -vlt_build_args=-DVERILATOR_VCD -x_tiles="+str(X_DIMM)+" -y_tiles="+str(Y_DIMM)+" -ariane -config_rtl=PITON_NO_JTAG -config_rtl=PITON_NO_CHIP_BRIDGE -config_rtl=PITON_CLKS_CHIPSET -config_rtl=MINIMAL_MONITORING"
     else:
-        gen_command = "sims -sys=manycore -vlt_build -x_tiles="+str(X_DIMM)+" -y_tiles="+str(Y_DIMM)+" -ariane -config_rtl=PITON_NO_JTAG -config_rtl=PITON_NO_CHIP_BRIDGE -config_rtl=PITON_CLKS_CHIPSET"
+        gen_command = "sims -sys=manycore -vlt_build -x_tiles="+str(X_DIMM)+" -y_tiles="+str(Y_DIMM)+" -ariane -config_rtl=PITON_NO_JTAG -config_rtl=PITON_NO_CHIP_BRIDGE -config_rtl=PITON_CLKS_CHIPSET -config_rtl=MINIMAL_MONITORING"
 
 
     print "\nCommand executed: " + gen_command
@@ -83,7 +83,7 @@ def run_verilator(vsim, X_DIMM, Y_DIMM, testcase):
 def wave_verilator(X_DIMM, Y_DIMM):
     #Call wavegen
     print "Generating the wave for Questa in a Verilator simulation "
-    os.system("openpiton-verilator_wavegen "+str(X_DIMM)+" "+str(Y_DIMM))
+    os.system("python ../utils/openpiton-verilator_wavegen.py "+str(X_DIMM)+" "+str(Y_DIMM))
     
 
 ################################################################################
@@ -98,7 +98,7 @@ def wave_verilator(X_DIMM, Y_DIMM):
 def wave_questa(X_DIMM, Y_DIMM):
         #Call wavegen
         print "Generating the wave for Questa in a Questa simulation"
-        os.system("openpiton-questa_wavegen "+str(X_DIMM)+" "+str(Y_DIMM))
+        os.system("python ../utils/openpiton-questa_wavegen.py "+str(X_DIMM)+" "+str(Y_DIMM))
 
 
 def gen_questa(X_DIMM, Y_DIMM):
@@ -177,17 +177,21 @@ DESCRIPTION
     
     Semi-Optional arguments (-run or -gen or -all is mandatory):
 
-        -gen        (Optional), Generates the manycore model
+        -V          Use Verilator
 
-        -wave    (Optional), Generates manycore model with waveform generation enabled
+        -Q          Use QuestaSim
 
-        -run        (Optional), Runs the manycore model in the specif testcase after run command, e.g.: -run prod_cons
+        -gen        Generates the manycore model
 
-        -all        (Optional), Generates and runs the manycore model in the specif testcase after all command, e.g.: -all prod_cons
+        -wave       Generates manycore model with waveform generation enabled
 
-        -vsim       (Optional), Opens ModelSim 
+        -run        Runs the manycore model in the specif testcase after run command, e.g.: -run prod_cons
 
-        -debug      (Optional), Opens GUI Debugger 
+        -all        Generates and runs the manycore model in the specif testcase after all command, e.g.: -all prod_cons
+
+        -vsim       Opens ModelSim 
+
+        -debug      Opens GUI Debugger 
 
 '''
 
@@ -211,6 +215,7 @@ modelsim = False
 modelsim_gen = False
 debug = False
 testcase = ""
+compilator = "Q"
 
 args_ok = False
 
@@ -223,6 +228,8 @@ for index in range(3,len(sys.argv)):
     elif arg == "-wave":
         with_wave = True
 
+    elif arg == "-V":
+        compilator = "V"
     elif arg == "-run":
         run_openpiton = True
         try:
@@ -262,6 +269,11 @@ if run_openpiton or generate_openpiton:
     os.system("mkdir "+debug_folder)
     os.system("mkdir "+log_folder)
 
+    #Create mem_cpu log file
+    mem_cpu_file = debug_folder+"/mem_cpu_log.txt"
+    file = open(mem_cpu_file, "w+")
+    file.close()
+
     platform_cfg = "mpsoc_x "+str(X_DIMM)+"\n"
     platform_cfg = platform_cfg + "mpsoc_y "+str(Y_DIMM)
     platform_cfg = platform_cfg + """
@@ -283,8 +295,8 @@ END_app_name_relation"""
     file = open(debug_folder+"/platform.cfg", 'w')
     file.write(platform_cfg)
     file.close() 
-
-    os.system("cp "+piton_root+"/piton/verif/debug_env/services.cfg "+debug_folder+"/")
+    
+    os.system("cp "+piton_root+"/utils/debug_model/services.cfg "+debug_folder+"/")
 
     os.system("touch "+debug_folder+"/traffic_router.txt")
 
@@ -303,21 +315,27 @@ END_app_name_relation"""
 if debug:
     platform_path = build_dir+"/debug/platform.cfg"
     print "Opening Graphical Debugger\n"
-    os.system("java -jar "+piton_root+"/bin/OpenPiton_Debugger.jar "+platform_path+" &")
+    os.system("java -jar "+piton_root+"/utils/OpenPiton_Debugger.jar "+platform_path+" &")
 
 if with_wave:
 
-    wave_questa(X_DIMM, Y_DIMM)
-    #wave_verilator(X_DIMM, Y_DIMM)
+    if compilator == "Q":
+        wave_questa(X_DIMM, Y_DIMM)
+    elif compilator == "V":
+        wave_verilator(X_DIMM, Y_DIMM)
 
 if generate_openpiton:
 
-    gen_questa(X_DIMM, Y_DIMM)
-    #gen_verilator(modelsim, X_DIMM, Y_DIMM)
+    if compilator == "Q":
+        gen_questa(X_DIMM, Y_DIMM)
+    elif compilator == "V":
+        gen_verilator(modelsim, X_DIMM, Y_DIMM)
 
 if run_openpiton:
 
-    run_questa(with_wave, modelsim, X_DIMM, Y_DIMM, testcase, build_dir)
-    #run_verilator(modelsim, X_DIMM, Y_DIMM, testcase)
+    if compilator == "Q":
+        run_questa(with_wave, modelsim, X_DIMM, Y_DIMM, testcase, build_dir)
+    elif compilator == "V":
+        run_verilator(modelsim, X_DIMM, Y_DIMM, testcase)
 
 

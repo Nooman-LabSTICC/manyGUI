@@ -48,6 +48,9 @@ module perf_counters #(parameter int unsigned CORE_ADDR = 1)(
 
   integer counter; //COmpensates the idle time at beggining
 
+  //Output file
+  integer fd; 
+
   always_comb begin : perf_counters
     perf_counter_d = perf_counter_q;
     data_o = 'b0;
@@ -133,11 +136,17 @@ module perf_counters #(parameter int unsigned CORE_ADDR = 1)(
         if (commit_ack_i[i]) begin
           //******Intruction Counter********
           if (commit_instr_i[i].fu == ALU) begin
-            $display("ALU instr:%0d-%0d",counter, CORE_ADDR);
+            fd = $fopen("debug/mem_cpu_log.txt", "a");
+            $fdisplay(fd,"ALUinstr:%0d:%0d;",counter, CORE_ADDR);
+            $fclose(fd); 
           end else if (commit_instr_i[i].fu == LOAD || commit_instr_i[i].fu == STORE) begin
-            $display("LSU instr:%0d-%0d",counter,CORE_ADDR);
+            fd = $fopen("debug/mem_cpu_log.txt", "a");
+            $fdisplay(fd,"LSUinstr:%0d:%0d;",counter,CORE_ADDR);
+            $fclose(fd); 
           end else begin
-            $display("Others instr:%0d-%0d",counter,CORE_ADDR);
+            fd = $fopen("debug/mem_cpu_log.txt", "a");
+            $fdisplay(fd,"Othersinstr:%0d:%0d;",counter,CORE_ADDR);
+            $fclose(fd); 
           end
         end
       end
