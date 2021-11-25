@@ -31,9 +31,9 @@ We modified OpenPiton hardware model to support the debugging features of ManyGU
 ## Video tutorials:
 
 ### Version 1: 
-[![IMAGE ALT TEXT HERE](https://i9.ytimg.com/vi/XOHMqZNIwks/mq1.jpg?sqp=CMTe7owG&rs=AOn4CLDErcdypEBFOoGvY5EyYqIg0sdBBQ)](https://youtu.be/XOHMqZNIwks)
+[![LINK 1](https://i9.ytimg.com/vi/XOHMqZNIwks/mq1.jpg)](https://youtu.be/XOHMqZNIwks)
 ### Version 2:
-[![IMAGE ALT TEXT HERE](https://i9.ytimg.com/vi/VU6yRrICwsk/mq2.jpg?sqp=CPDg7owG&rs=AOn4CLC22AT6JXWSqFt91Xa8u8bwt3sNOQ)](https://youtu.be/VU6yRrICwsk)
+[![LINK 2](https://i9.ytimg.com/vi/VU6yRrICwsk/mq2.jpg)](https://youtu.be/VU6yRrICwsk)
 
 
 
