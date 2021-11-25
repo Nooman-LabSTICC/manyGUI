@@ -29,7 +29,7 @@ We modified OpenPiton hardware model to support the debugging features of ManyGU
 
 ----
 > If you found problems following this steps, please considers use the OpenPiton version that already is integrated with ManyGUI.
-To do so, please follow the instruction of this [link](https://github.com/Nooman-LabSTICC/nooman-openpiton)
+To do so, please follow the instructions of this [link](https://github.com/Nooman-LabSTICC/nooman-openpiton)
 ----
 
 
