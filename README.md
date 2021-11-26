@@ -21,7 +21,7 @@ We modified OpenPiton hardware model to support the debugging features of ManyGU
 5. Runs a given application using the many-core testcase
    1. Goes into PITON_ROOT/build  
    2. Calls the following command:
-        > openpiton 3 3 -all **<name_of_your_c_file>** -debug
+        > openpiton 3 3 -V -all **<name_of_your_c_file>** -debug
     1. The **<name_of_your_c_file>** is the name of the .c file that implements your application. It must be inside PITON_ROOT/piton/verif/diag/c/riscv/ariane
 
 6. The simulation should start and ManyGUI must be opened.
@@ -44,5 +44,5 @@ To do so, please follow the instructions of this [link](https://github.com/Nooma
 
 > This project was develoved in Lab-STICC - UBS, Lorient, France.  
 > Contact: 
-> >marcelo.ruaro@univ-ubs.fr (Marcelo Ruaro - main developer)  
+> >marcelo.ruaro@univ-ubs.fr (Marcelo Ruaro - postdoc researcher and main developer)  
 > >kevin.martin@univ-ubs.fr (Kevin Martin - supervisor)
