@@ -1,6 +1,5 @@
 import matplotlib.pyplot as plt
 import numpy as np
-import matplotlib.pyplot as plt
 import matplotlib.cm as cm           # import colormap stuff!
 import numpy as np
 import math
@@ -22,21 +21,21 @@ PLOT_NAME = PLOT_NAME.replace("_", " ")
 
 
 #Convert String to Float values
-noc = map(float, noc.strip('[]').split(','))
-mem = map(float, mem.strip('[]').split(','))
-cpu = map(float, cpu.strip('[]').split(','))
+noc = list(map(float, noc.strip('[]').split(',')))
+mem = list(map(float, mem.strip('[]').split(',')))
+cpu = list(map(float, cpu.strip('[]').split(',')))
 
-print "NoC serie:",noc
-print "Mem serie:",mem
-print "CPU serie:",cpu
-print "Show",NORMALIZED,"values"
-print "Plot name:",PLOT_NAME
-print "Window size Kcycles:",WINDOW_SIZE_KCYCLES
-print "Max_y_axis:",MAX_Y
+print("NoC serie:",noc)
+print("Mem serie:",mem)
+print("CPU serie:",cpu)
+print("Show",NORMALIZED,"values")
+print("Plot name:",PLOT_NAME)
+print("Window size Kcycles:",WINDOW_SIZE_KCYCLES)
+print("Max_y_axis:",MAX_Y)
 
 
 fig, ax = plt.subplots()
-fig.canvas.set_window_title(PLOT_NAME)
+fig.canvas.manager.set_window_title(PLOT_NAME)
 
 windows = np.arange(len(noc)) #Xticks
 width = 1 #Space between bars

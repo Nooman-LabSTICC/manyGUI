@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import os
 import sys
 import shutil
@@ -13,7 +13,7 @@ import shutil
 ################################################################################
 
 def yes_or_no(question):
-    reply = str(raw_input(question+' (y/n): ')).lower().strip()
+    reply = input(question+' (y/n): ').lower().strip()
     if reply[0] == 'y':
         return True
     if reply[0] == 'n':
@@ -24,11 +24,11 @@ def yes_or_no(question):
 
 def convert_wave():
     #if yes_or_no("Convert vcd?"):
-    print "Renaming my_top.vcd to wave.vcd\n"
+    print("Renaming my_top.vcd to wave.vcd\n")
     os.system("mv my_top.vcd wave.vcd")
 
     #Convert vcd to wlf
-    print "Converting wave.vcd to wave.wlf\n"
+    print("Converting wave.vcd to wave.wlf\n")
     os.system("vcd2wlf wave.vcd wave.wlf")
 
 
@@ -39,9 +39,9 @@ def gen_verilator(vsim, X_DIMM, Y_DIMM):
         gen_command = "sims -sys=manycore -vlt_build -x_tiles="+str(X_DIMM)+" -y_tiles="+str(Y_DIMM)+" -ariane -config_rtl=PITON_NO_JTAG -config_rtl=PITON_NO_CHIP_BRIDGE -config_rtl=PITON_CLKS_CHIPSET -config_rtl=MINIMAL_MONITORING"
 
 
-    print "\nCommand executed: " + gen_command
+    print("\nCommand executed: " + gen_command)
 
-    print "\nGenerating OpenPiton, please wait the finishing message (in 2 min. approximately)..."
+    print("\nGenerating OpenPiton, please wait the finishing message (in 2 min. approximately)...")
 
     #log_file = "openpithon-gen.log"
     #exit_status = os.system(gen_command + " > "+log_file)
@@ -51,7 +51,7 @@ def gen_verilator(vsim, X_DIMM, Y_DIMM):
        # sys.exit("\nError in generating OpenPiton"+"\nLog file: "+log_file)
         sys.exit("\nError in generating OpenPiton")
     else:
-        print "\nSuccess!"
+        print("\nSuccess!")
 
     #print "\nLog file: "+log_file
 
@@ -69,21 +69,21 @@ def run_verilator(vsim, X_DIMM, Y_DIMM, testcase):
 #max)cycles is the simulatio time
     exit_status = os.system(run_command)
 
-    print "\nRunning command executed: " + run_command
+    print("\nRunning command executed: " + run_command)
     if exit_status != 0:
         sys.exit("\nError in running OpenPiton"+"\nLog file: "+log_file)
     
     if vsim:
         convert_wave()
         
-        print "\nOpening ModelSim"
+        print("\nOpening ModelSim")
         os.system("vsim -view wave.wlf -do wave.do")
     
 
 def wave_verilator(X_DIMM, Y_DIMM):
     #Call wavegen
-    print "Generating the wave for Questa in a Verilator simulation "
-    os.system("python ../utils/openpiton-verilator_wavegen.py "+str(X_DIMM)+" "+str(Y_DIMM))
+    print("Generating the wave for Questa in a Verilator simulation ")
+    os.system("python3 ../utils/openpiton-verilator_wavegen.py "+str(X_DIMM)+" "+str(Y_DIMM))
     
 
 ################################################################################
@@ -97,24 +97,24 @@ def wave_verilator(X_DIMM, Y_DIMM):
 
 def wave_questa(X_DIMM, Y_DIMM):
         #Call wavegen
-        print "Generating the wave for Questa in a Questa simulation"
-        os.system("python ../utils/openpiton-questa_wavegen.py "+str(X_DIMM)+" "+str(Y_DIMM))
+        print("Generating the wave for Questa in a Questa simulation")
+        os.system("python3 ../utils/openpiton-questa_wavegen.py "+str(X_DIMM)+" "+str(Y_DIMM))
 
 
 def gen_questa(X_DIMM, Y_DIMM):
 
         gen_command = "sims -sys=manycore -msm_build -x_tiles="+str(X_DIMM)+" -y_tiles="+str(Y_DIMM)+" -ariane -config_rtl=PITON_NO_JTAG -config_rtl=PITON_NO_CHIP_BRIDGE -config_rtl=PITON_CLKS_CHIPSET -config_rtl=MINIMAL_MONITORING"
 
-        print "\nCommand executed: " + gen_command
+        print("\nCommand executed: " + gen_command)
 
-        print "\nGenerating OpenPiton, please wait the finishing message (in 2 min. approximately)..."
+        print("\nGenerating OpenPiton, please wait the finishing message (in 2 min. approximately)...")
 
         exit_status = os.system(gen_command)
 
         if exit_status != 0:
             sys.exit("\nError in generating OpenPiton")
         else:
-            print "\nSuccess!"
+            print("\nSuccess!")
 
         #print "\nLog file: "+log_file
 
@@ -146,7 +146,7 @@ def run_questa(wave, vsim, X_DIMM, Y_DIMM, testcase, build_dir):
 
         exit_status = os.system(run_command)
 
-        print "\nRunning command executed: " + run_command
+        print("\nRunning command executed: " + run_command)
         if exit_status != 0:
             sys.exit("\nError in running OpenPiton"+"\nLog file: "+log_file)
         
@@ -196,7 +196,7 @@ DESCRIPTION
 '''
 
 if len(sys.argv) == 1:
-    print man
+    print(man)
     sys.exit(1)
 
 try:
@@ -254,7 +254,7 @@ for index in range(3,len(sys.argv)):
         modelsim = True
 
 if run_openpiton and testcase == "":
-    print man
+    print(man)
     sys.exit("Missing testcase name when -run is enabled, e.g.: openpiton 2 2 -run -testcase ola")
 
 
@@ -314,7 +314,7 @@ END_app_name_relation"""
 
 if debug:
     platform_path = build_dir+"/debug/platform.cfg"
-    print "Opening Graphical Debugger\n"
+    print("Opening Graphical Debugger\n")
     os.system("java -jar "+piton_root+"/utils/OpenPiton_Debugger.jar "+platform_path+" &")
 
 if with_wave:

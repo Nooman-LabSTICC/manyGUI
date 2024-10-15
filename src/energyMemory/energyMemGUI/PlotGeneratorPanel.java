@@ -134,7 +134,7 @@ public class PlotGeneratorPanel extends javax.swing.JPanel {
 
         jComboBoxWhat.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         add(jComboBoxWhat);
-        jComboBoxWhat.setBounds(20, 110, 170, 27);
+        jComboBoxWhat.setBounds(20, 110, 170, 23);
 
         jLabel2.setText("To who?");
         add(jLabel2);
@@ -142,7 +142,7 @@ public class PlotGeneratorPanel extends javax.swing.JPanel {
 
         jComboBoxToWho.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         add(jComboBoxToWho);
-        jComboBoxToWho.setBounds(20, 50, 170, 27);
+        jComboBoxToWho.setBounds(20, 50, 170, 23);
 
         jLabel3.setText("What?");
         add(jLabel3);
@@ -155,7 +155,7 @@ public class PlotGeneratorPanel extends javax.swing.JPanel {
             }
         });
         add(jCheckBoxNormalized);
-        jCheckBoxNormalized.setBounds(200, 110, 51, 24);
+        jCheckBoxNormalized.setBounds(200, 110, 43, 21);
 
         jButtonGenerate.setText("Generate Plot - Matplotlib");
         jButtonGenerate.addActionListener(new java.awt.event.ActionListener() {
@@ -164,7 +164,7 @@ public class PlotGeneratorPanel extends javax.swing.JPanel {
             }
         });
         add(jButtonGenerate);
-        jButtonGenerate.setBounds(20, 150, 250, 29);
+        jButtonGenerate.setBounds(20, 150, 250, 23);
 
         jLabel4.setText("Per Window?");
         add(jLabel4);
@@ -177,7 +177,7 @@ public class PlotGeneratorPanel extends javax.swing.JPanel {
             }
         });
         add(jCheckBoxPerWindow);
-        jCheckBoxPerWindow.setBounds(200, 50, 51, 24);
+        jCheckBoxPerWindow.setBounds(200, 50, 43, 21);
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonGenerateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonGenerateActionPerformed

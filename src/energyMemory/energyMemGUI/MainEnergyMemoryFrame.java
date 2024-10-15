@@ -44,8 +44,8 @@ public class MainEnergyMemoryFrame extends javax.swing.JFrame{
         simulTimejLabel.setText(Integer.toString(controlPanel.getSimultime_cycles()));
         
         
-        this.setPreferredSize(new Dimension(XDIM*100, YDIM*100+500));
-        this.setMinimumSize(new Dimension(XDIM*200,YDIM*100+500));
+        this.setPreferredSize(new Dimension(XDIM*1000, YDIM*100+800));
+        this.setMinimumSize(new Dimension(XDIM*500,YDIM*100+400));
         
         String simLogPath = debugPath+"/mem_cpu_log.txt";
         String nocPath = debugPath+"/traffic_router.txt";

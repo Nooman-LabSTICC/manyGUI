@@ -1,4 +1,3 @@
-import matplotlib.pyplot as plt
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm           # import colormap stuff!
@@ -20,18 +19,17 @@ PLOT_NAME = PLOT_NAME.replace("_", " ")
 
 
 #Convert String to Float values
-x_series = map(float, x_series.strip('[]').split(','))
+x_series = list(map(float, x_series.strip('[]').split(',')))
 
-
-print "X serie:",x_series
-print "Show",NORMALIZED,"values"
-print "Plot name:",PLOT_NAME
-print "Window size Kcycles:",WINDOW_SIZE_KCYCLES
-print "Max_y_axis:",MAX_Y
+print("X serie:",x_series)
+print("Show",NORMALIZED,"values")
+print("Plot name:",PLOT_NAME)
+print("Window size Kcycles:",WINDOW_SIZE_KCYCLES)
+print("Max_y_axis:",MAX_Y)
 
 
 fig, ax = plt.subplots()
-fig.canvas.set_window_title(PLOT_NAME)
+fig.canvas.manager.set_window_title(PLOT_NAME)
 
 windows = np.arange(len(x_series)) #Xticks
 width = 1 #Space between bars
@@ -44,7 +42,6 @@ fs='none'
 lstile = '-'
 
 plt.plot(windows, x_series_set, marker='o', ls=lstile, linewidth=lw, color='b', fillstyle=fs, markersize='4',  label=PLOT_NAME)
-
 
 
 #plt.legend(loc=(0.1,1.02), frameon=True, edgecolor="black", framealpha=1, ncol=1) # framealpha=1 transparencia da porra da legenda
@@ -77,7 +74,7 @@ if "rate" in PLOT_NAME:
     y_pos = sum(x_series_set) / len(x_series_set)
     x1, y1 = [0, y_pos], [len(x_series_set), y_pos]
     plt.plot(x1, y1)
-    print "Aqui"
+    print("Aqui")
 
 
 plt.tight_layout()
